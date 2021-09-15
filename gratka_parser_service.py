@@ -25,14 +25,14 @@ class ParserService:
 
     def parse_location(self, content):
         try:
-            new_location = self.remove_characters(content['Lokalizacja'], ' ')
+            new_location = self.remove_characters(content['Lokalizacja'], ' \n')
             content['Lokalizacja'] = new_location
         except Exception as exception:
             print("zawiodlem parse_location", exception)
 
     def parse_area(self, content):
         try:
-            new_area = self.remove_characters(content['Powierzchnia w m2'], ' \n')
+            new_area = self.remove_characters(content['Powierzchnia w m2'], '\n ')
             new_area = new_area[:-2] # last to characters stands for 'm2'
             new_area = new_area.translate(new_area.maketrans(",","."))
             print(new_area)
