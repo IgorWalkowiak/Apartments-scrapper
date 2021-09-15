@@ -1,11 +1,24 @@
 from kafka import KafkaConsumer
 import json
 
-kafka_addr = 'localhost:9092'
+def get_database():
+    import pymongo
+    import credentials
+    CONNECTION_STRING = "mongodb+srv://"+credentials.username+":"+credentials.password+"@cluster0.v0bqn.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
+    client = pymongo.MongoClient(CONNECTION_STRING)
+    return client['scrapper']
 
-kafka_consumer = KafkaConsumer('parsed_data', bootstrap_servers=kafka_addr,
+class StoreService:
+    def __init__(self, kafka_addr):
+        self.kafka_consumer = KafkaConsumer('parsed_data', bootstrap_servers=kafka_addr,
                                     value_deserializer=lambda m: json.loads(m.decode('ascii')))
+        db = get_database()
+        self.collection = db['apartments']
 
+    def start(self):
+        for message in self.kafka_consumer:
+            print("received message!")
+            self.collection.insert_one(message.value)
 
-for message in kafka_consumer:
-    print(type(message.value['Powierzchnia w m2']))
+service = StoreService('localhost:9092')
+service.start()
