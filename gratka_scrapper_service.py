@@ -6,7 +6,6 @@ import json
 
 GRATKA_URL = "https://gratka.pl/nieruchomosci/mieszkania"
 
-
 class ScrapperService:
     def __init__(self, pause_time, kafka_addr):
         self.pause_time = pause_time
@@ -58,4 +57,6 @@ class ScrapperService:
 
             self.send_data(params)
 
+scrapper = ScrapperService(2, 'localhost:9092')
+scrapper.start()
 
