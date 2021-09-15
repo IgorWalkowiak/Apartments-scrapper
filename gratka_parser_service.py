@@ -40,6 +40,19 @@ class ParserService:
         except Exception as exception:
             print("zawiodlem parse_area", exception)
 
+    def parse_number_of_rooms(self, content):
+        try:
+            content['Liczba pokoi'] = int(content['Liczba pokoi'])
+        except Exception as exception:
+            print("zawiodlem parse_number_of_rooms", exception)
+
+    def parse_floor_number(self, content):
+        try:
+            content['Piętro'] = int(content['Piętro'])
+        except Exception as exception:
+            print("zawiodlem parse_number_of_rooms", exception)
+
+
     def send_data(self, data):
         future = self.producer.send('parsed_data', json.dumps(data).encode('utf-8'))
         result = future.get(timeout=60)
@@ -50,6 +63,9 @@ class ParserService:
         self.parse_price(content)
         self.parse_location(content)
         self.parse_area(content)
+        self.parse_number_of_rooms(content)
+        self.parse_floor_number(content)
+
         print(content)
         self.send_data(content)
 
